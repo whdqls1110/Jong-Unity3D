@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BulletManager : MonoBehaviour
 {
+    public GameObject effect;
     public Rigidbody LinkRigid = null;
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,18 @@ public class BulletManager : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        GameObject Effect = Instantiate(effect);
+        Effect.transform.position = transform.position;
         GameObject.Destroy(gameObject);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enimy"))
+        {
+            GameObject Effect = Instantiate(effect);
+            Effect.transform.position = transform.position;
+            Destroy(other.gameObject);
+            GameObject.Destroy(gameObject);
+        }
     }
 }

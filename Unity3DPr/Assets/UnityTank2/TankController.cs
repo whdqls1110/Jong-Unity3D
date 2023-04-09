@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TankController : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class TankController : MonoBehaviour
     public GameObject bullet;
     public GameObject pos;
     public float power = 10;
+    float strtime = 0;
+    bool isprece = true;
+    float mtime = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +25,15 @@ public class TankController : MonoBehaviour
     void Update()
     {
         Move();
-        Fire();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            strtime = Time.time;
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            mtime = Time.time - strtime;
+            Fire();
+        }
     }
     void Move()
     {
@@ -32,14 +44,15 @@ public class TankController : MonoBehaviour
     }
     void Fire()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (isprece)
         {
             GameObject Bullet = Instantiate(bullet);
             Bullet.transform.position = pos.transform.position;
             Bullet.transform.rotation = pos.transform.rotation;
-            Bullet.SetActive(true);
             Rigidbody bulltRig = Bullet.GetComponent<Rigidbody>();
-            bulltRig.AddRelativeForce(0f, 0f, power);
+            //bulltRig.AddRelativeForce(0f, 0f, power);
+
+            bulltRig.AddForce(pos.transform.forward * power * mtime, ForceMode.Force);
         }
     }
 }
